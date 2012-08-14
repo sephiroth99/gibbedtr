@@ -20,6 +20,10 @@
  *    distribution.
  */
 
+//-----------------------------------------------------------------------------
+// Additionnal modifications by sephiroth99
+//-----------------------------------------------------------------------------
+
 using System.IO;
 
 namespace Gibbed.TombRaider.FileFormats.DRM

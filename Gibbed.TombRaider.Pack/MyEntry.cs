@@ -20,6 +20,10 @@
  *    distribution.
  */
 
+//-----------------------------------------------------------------------------
+// Additionnal modifications by sephiroth99
+//-----------------------------------------------------------------------------
+
 using Big = Gibbed.CrystalDynamics.FileFormats.Big;
 
 namespace Gibbed.TombRaider.Pack

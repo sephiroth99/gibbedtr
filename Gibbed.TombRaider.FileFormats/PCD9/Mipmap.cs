@@ -20,6 +20,10 @@
  *    distribution.
  */
 
+//-----------------------------------------------------------------------------
+// Additionnal modifications by sephiroth99
+//-----------------------------------------------------------------------------
+
 namespace Gibbed.TombRaider.FileFormats.PCD9
 {
     public class Mipmap

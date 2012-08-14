@@ -5,3 +5,4 @@ obj/
 debug/
 bin_tr/
 bin_dx3/
+*.bak

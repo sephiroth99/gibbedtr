@@ -20,6 +20,10 @@
  *    distribution.
  */
 
+//-----------------------------------------------------------------------------
+// Additionnal modifications by sephiroth99
+//-----------------------------------------------------------------------------
+
 namespace Gibbed.TombRaider.FileFormats.DRM
 {
     public enum SectionType : byte
