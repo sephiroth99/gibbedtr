@@ -21,7 +21,7 @@
  */
 
 //-----------------------------------------------------------------------------
-// Additionnal modifications by sephiroth99
+// Additional modifications by sephiroth99
 //-----------------------------------------------------------------------------
 
 using System;

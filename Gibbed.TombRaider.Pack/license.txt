@@ -20,4 +20,4 @@ freely, subject to the following restrictions:
    distribution.
 
 -----------------------------------------------------------------------------
-Additionnal modifications by sephiroth99
+Additional modifications by sephiroth99
