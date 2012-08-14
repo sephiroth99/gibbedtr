@@ -1,0 +1,7 @@
+*.csproj.user
+*.suo
+bin/
+obj/
+debug/
+bin_tr/
+bin_dx3/
