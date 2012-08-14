@@ -288,10 +288,16 @@ namespace Gibbed.TombRaider.DRMEdit
 
         private void OnSaveDRM(object sender, EventArgs e)
         {
-            FileStream file = new FileStream("D:\\test.drm", FileMode.Create, FileAccess.Write);
-            Stream data = this.FileData.Serialize();
-            file.WriteFromStream(data, data.Length);
-            file.Close();
+            if (this.saveFileDialog.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            using (var output = this.saveFileDialog.OpenFile())
+            {
+                Stream data = this.FileData.Serialize();
+                output.WriteFromStream(data, data.Length);
+            }
         }
     }
 }

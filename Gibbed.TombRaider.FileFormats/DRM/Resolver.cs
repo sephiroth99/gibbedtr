@@ -115,12 +115,13 @@ namespace Gibbed.TombRaider.FileFormats.DRM
             }
 
             this.Unknown3s.Clear();
-            for (uint i = 0; i < count3; i++)
-            {
+            if (count3 > 0)
                 throw new NotSupportedException();
-                var a = input.ReadValueU32();
-                this.Unknown3s.Add(a);
-            }
+            //for (uint i = 0; i < count3; i++)
+            //{
+            //    var a = input.ReadValueU32();
+            //    this.Unknown3s.Add(a);
+            //}
 
             this.Unknown4s.Clear();
             for (uint i = 0; i < count4; i++)

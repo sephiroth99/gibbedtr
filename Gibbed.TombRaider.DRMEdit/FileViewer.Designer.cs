@@ -65,6 +65,7 @@ namespace Gibbed.TombRaider.DRMEdit
             this.viewSectionRawButton = new System.Windows.Forms.ToolStripButton();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.hintLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.toolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -149,6 +150,11 @@ namespace Gibbed.TombRaider.DRMEdit
             this.hintLabel.Size = new System.Drawing.Size(30, 17);
             this.hintLabel.Text = "Hint";
             // 
+            // saveFileDialog
+            // 
+            this.saveFileDialog.DefaultExt = "drm";
+            this.saveFileDialog.Filter = "DRM Files (*.drm)|*.drm|All Files (*.*)|*.*";
+            // 
             // FileViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -179,5 +185,6 @@ namespace Gibbed.TombRaider.DRMEdit
         private System.Windows.Forms.ToolStripStatusLabel hintLabel;
         private System.Windows.Forms.ImageList typeImageList;
         private System.Windows.Forms.ToolStripButton viewSectionRawButton;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
     }
 }
