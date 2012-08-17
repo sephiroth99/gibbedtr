@@ -80,6 +80,7 @@ namespace Gibbed.TombRaider.DRMEdit
             this.entryTreeView.SelectedImageIndex = 0;
             this.entryTreeView.Size = new System.Drawing.Size(480, 193);
             this.entryTreeView.TabIndex = 8;
+            this.entryTreeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.OnNodeDoubleClick);
             // 
             // typeImageList
             // 

@@ -59,6 +59,8 @@ namespace Gibbed.TombRaider.FileFormats
             for (int i = 0; i < sectionCount; i++)
             {
                 DRM.Section section = this.Sections[i];
+
+                // Serialize resolvers to get length, data will be used later
                 uint resolverLen;
                 if (section.Resolver != null)
                 {
@@ -105,20 +107,27 @@ namespace Gibbed.TombRaider.FileFormats
             }
 
             var version = input.ReadValueU32();
-            if (version != 19 && version.Swap() != 19 &&
+            if (version != 14 && version.Swap() != 14 &&
+                version != 19 && version.Swap() != 19 &&
                 version != 21 && version.Swap() != 21)
             {
                 throw new FormatException();
             }
 
             this.LittleEndian =
+                version == 14 ||
                 version == 19 ||
                 version == 21;
             this.Version = this.LittleEndian == true ? version : version.Swap();
 
-            if (this.Version == 21) // TR support only
+            if (this.Version == 14)
             {
-                throw new NotSupportedException();
+                throw new NotSupportedException("TRL/TRA not supported");
+            }
+
+            if (this.Version == 21)
+            {
+                throw new NotSupportedException("DX3 not supported");
             }
 
             if (input.Length < 20)

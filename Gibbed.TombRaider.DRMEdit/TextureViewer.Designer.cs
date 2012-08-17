@@ -68,6 +68,7 @@ namespace Gibbed.TombRaider.DRMEdit
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.hintLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.previewPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.previewPictureBox)).BeginInit();
             this.toolStrip.SuspendLayout();
@@ -110,12 +111,12 @@ namespace Gibbed.TombRaider.DRMEdit
             // 
             // saveButton
             // 
-            this.saveButton.Enabled = false;
             this.saveButton.Image = ((System.Drawing.Image)(resources.GetObject("saveButton.Image")));
             this.saveButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(51, 22);
             this.saveButton.Text = "Save";
+            this.saveButton.Click += new System.EventHandler(this.OnSave);
             // 
             // toolStripSeparator1
             // 
@@ -124,12 +125,12 @@ namespace Gibbed.TombRaider.DRMEdit
             // 
             // loadFromFileButton
             // 
-            this.loadFromFileButton.Enabled = false;
             this.loadFromFileButton.Image = ((System.Drawing.Image)(resources.GetObject("loadFromFileButton.Image")));
             this.loadFromFileButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.loadFromFileButton.Name = "loadFromFileButton";
             this.loadFromFileButton.Size = new System.Drawing.Size(105, 22);
             this.loadFromFileButton.Text = "Load From File";
+            this.loadFromFileButton.Click += new System.EventHandler(this.OnLoadFromFile);
             // 
             // saveToFileButton
             // 
@@ -192,6 +193,10 @@ namespace Gibbed.TombRaider.DRMEdit
             this.saveFileDialog.DefaultExt = "png";
             this.saveFileDialog.Filter = "PNG Files (*.png)|*.png|All Files (*.*)|*.*";
             // 
+            // openFileDialog
+            // 
+            this.openFileDialog.Filter = "Image|*.png;*.jpg;*.jpeg;*.tif;*.tiff;*.bmp|All Files|*.*";
+            // 
             // TextureViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -228,5 +233,6 @@ namespace Gibbed.TombRaider.DRMEdit
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel hintLabel;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
     }
 }

@@ -35,6 +35,7 @@ namespace Gibbed.TombRaider.DRMEdit
     public partial class TextureViewer : Form, ISectionViewer
     {
         public FileFormats.PCD9File Texture;
+        public FileFormats.DRM.Section Section;
 
         public TextureViewer()
         {
@@ -54,6 +55,7 @@ namespace Gibbed.TombRaider.DRMEdit
             //this.Text += ": " + entry.Description;
 
             this.Texture = texture;
+            this.Section = section;
 
             this.UpdatePreview(true);
         }
@@ -83,6 +85,27 @@ namespace Gibbed.TombRaider.DRMEdit
             Marshal.Copy(output, 0, data.Scan0, output.Length);
             bitmap.UnlockBits(data);
             return bitmap;
+        }
+
+        private static byte[] MakeTrueColorFromBitmap(Bitmap bitmap)
+        {
+            var output = new byte[bitmap.Width * bitmap.Height * 4];
+
+            var input =  new byte[bitmap.Width * bitmap.Height * 4];
+            var area = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+            var data = bitmap.LockBits(area, ImageLockMode.WriteOnly, bitmap.PixelFormat);
+            Marshal.Copy(data.Scan0, input, 0, input.Length);
+            bitmap.UnlockBits(data);
+
+            for (uint i = 0; i < bitmap.Width * bitmap.Height * 4; i += 4)
+            {
+                output[i + 0] = input[i + 2];
+                output[i + 1] = input[i + 1];
+                output[i + 2] = input[i + 0];
+                output[i + 3] = input[i + 3];
+            }
+
+            return output;
         }
 
         private static Bitmap MakeBitmapFromGrayscale(
@@ -140,6 +163,53 @@ namespace Gibbed.TombRaider.DRMEdit
             return bitmap;
         }
         #endregion
+
+        private void ReplaceImage(Image i)
+        {
+            if (i.Width != this.Texture.Width || i.Height != this.Texture.Height)
+                throw new FormatException("New texture must have the same size as the old one!");
+
+            var bitmap = new Bitmap(i/*, this.Texture.Width, this.Texture.Height*/);
+
+            if (bitmap.PixelFormat != PixelFormat.Format32bppArgb)
+                throw new FormatException("Unsupported pixel format");
+
+            var mip = MakeTrueColorFromBitmap(bitmap);
+
+            switch (this.Texture.Format)
+            {
+                case FileFormats.PCD9.Format.A8R8G8B8:
+                    this.Texture.Mipmaps[0].Data = mip;
+                    break;
+
+                case FileFormats.PCD9.Format.DXT1:
+                    this.Texture.Mipmaps[0].Data =
+                        Squish.Native.CompressImage(
+                            mip, bitmap.Width, bitmap.Height,
+                            Squish.Native.Flags.DXT1);
+                    break;
+
+                case FileFormats.PCD9.Format.DXT3:
+                    this.Texture.Mipmaps[0].Data =
+                        Squish.Native.CompressImage(
+                            mip, bitmap.Width, bitmap.Height,
+                            Squish.Native.Flags.DXT3);
+                    break;
+
+                case FileFormats.PCD9.Format.DXT5:
+                    this.Texture.Mipmaps[0].Data = 
+                        Squish.Native.CompressImage(
+                            mip, bitmap.Width, bitmap.Height,
+                            Squish.Native.Flags.DXT5);
+                    break;
+
+                default:
+                    break;
+            }
+
+            // Show the new image
+            this.UpdatePreview(false);
+        }
 
         private void UpdatePreview(bool first)
         {
@@ -264,6 +334,45 @@ namespace Gibbed.TombRaider.DRMEdit
             using (var output = this.saveFileDialog.OpenFile())
             {
                 this.previewPictureBox.Image.Save(output, ImageFormat.Png);
+            }
+        }
+
+        private void OnSave(object sender, EventArgs e)
+        {
+            //TODO Find a better way to do this!!
+            this.Section.Data = (System.IO.MemoryStream)this.Texture.Serialize();
+        }
+
+        private void OnLoadFromFile(object sender, EventArgs e)
+        {
+            if (this.openFileDialog.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            Image img = null;
+            try
+            {
+                img = Image.FromFile(this.openFileDialog.FileName);
+
+                this.ReplaceImage(img);
+            }
+            catch (OutOfMemoryException)
+            {
+                MessageBox.Show("Unsupported image format", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (FormatException ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("File error", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (img != null)
+                    img.Dispose();
             }
         }
     }

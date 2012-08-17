@@ -1,3 +1,7 @@
+//-----------------------------------------------------------------------------
+// Additional modifications by sephiroth99
+//-----------------------------------------------------------------------------
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -77,7 +81,19 @@ namespace Gibbed.Squish
             [DllImport("squish_64.dll", EntryPoint = "SquishDecompressImage", CallingConvention = CallingConvention.Cdecl)]
             internal static extern void DecompressImage([MarshalAs(UnmanagedType.LPArray)] byte[] rgba, int width, int height, [MarshalAs(UnmanagedType.LPArray)] byte[] blocks, int flags);
 		}
-	
+
+        private static void CallCompressImage(byte[] rgba, int width, int height, byte[] blocks, int flags)
+        {
+            if (Is64Bit() == true)
+            {
+                Native64.CompressImage(rgba, width, height, blocks, flags);
+            }
+            else
+            {
+                Native32.CompressImage(rgba, width, height, blocks, flags);
+            }
+        }
+
 		private static void CallDecompressImage(byte[] rgba, int width, int height, byte[] blocks, int flags)
 		{
             if (Is64Bit() == true)
@@ -89,6 +105,19 @@ namespace Gibbed.Squish
                 Native32.DecompressImage(rgba, width, height, blocks, flags);
 			}
 		}
+
+        public static byte[] CompressImage(byte[] pixels, int width, int height, Flags flags)
+        {
+            int bitPerBlock;
+            if((flags & Flags.DXT1) > 0)
+                bitPerBlock = 8;
+            else
+                bitPerBlock = 16;
+
+            var blockOutput = new byte[((width + 3) >> 2) * ((height + 3) >> 2) * bitPerBlock]; ;
+            CallCompressImage(pixels, width, height, blockOutput, (int)flags);
+            return blockOutput;
+        }
 
 		public static byte[] DecompressImage(byte[] blocks, int width, int height, Flags flags)
 		{

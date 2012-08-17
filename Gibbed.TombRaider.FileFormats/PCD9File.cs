@@ -20,6 +20,10 @@
  *    distribution.
  */
 
+//-----------------------------------------------------------------------------
+// Additional modifications by sephiroth99
+//-----------------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,7 +37,46 @@ namespace Gibbed.TombRaider.FileFormats
         public PCD9.Format Format;
         public ushort Width;
         public ushort Height;
+        public byte BPP;
         public List<PCD9.Mipmap> Mipmaps = new List<PCD9.Mipmap>();
+
+        public uint Unknown0C;
+        public ushort Unknown16;
+
+        public Stream Serialize()
+        {
+            MemoryStream data = new MemoryStream();
+            uint dataSize = 0;
+
+            // Header stuff
+            data.WriteValueU32(0x39444350);
+            data.WriteValueEnum<PCD9.Format>(this.Format);
+            data.Seek(4, SeekOrigin.Current); //skip dataSize for now
+            data.WriteValueU32(this.Unknown0C);
+            data.WriteValueU16(this.Width);
+            data.WriteValueU16(this.Height);
+            data.WriteValueU8(this.BPP);
+            data.WriteValueU8((byte)(this.Mipmaps.Count - 1));
+            data.WriteValueU16(this.Unknown16);
+
+            // Data stuff
+            //TODO sort to make sure the biggest is first? will the order ever change?
+            for (int i = 0; i < this.Mipmaps.Count; i++)
+            {
+                // Write image data
+                data.WriteBytes(this.Mipmaps[i].Data);
+
+                // Add length to total
+                dataSize += (uint)this.Mipmaps[i].Data.Length;
+            }
+
+            // Write dataSize
+            data.Seek(8, SeekOrigin.Begin);
+            data.WriteValueU32(dataSize);
+
+            data.Position = 0;
+            return data;
+        }
 
         public void Deserialize(Stream input)
         {
@@ -44,12 +87,12 @@ namespace Gibbed.TombRaider.FileFormats
 
             this.Format = input.ReadValueEnum<PCD9.Format>();
             var dataSize = input.ReadValueU32();
-            var unknown0C = input.ReadValueU32();
+            this.Unknown0C = input.ReadValueU32();
             this.Width = input.ReadValueU16();
             this.Height = input.ReadValueU16();
-            var bpp = input.ReadValueU8();
+            this.BPP = input.ReadValueU8();
             var mipMapCount = 1 + input.ReadValueU8();
-            var unknown16 = input.ReadValueU16();
+            this.Unknown16 = input.ReadValueU16();
 
             this.Mipmaps.Clear();
             using (var data = input.ReadToMemoryStream(dataSize))

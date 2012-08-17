@@ -299,5 +299,10 @@ namespace Gibbed.TombRaider.DRMEdit
                 output.WriteFromStream(data, data.Length);
             }
         }
+
+        private void OnNodeDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            this.OpenSection(this.entryTreeView.SelectedNode, false);
+        }
     }
 }
