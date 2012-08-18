@@ -37,6 +37,8 @@ namespace Gibbed.TombRaider.FileFormats
     {
         public uint Version;
         public bool LittleEndian;
+        public List<string> Unknown04s = new List<string>();
+        public List<string> Unknown08s = new List<string>();
 
         public List<DRM.Section> Sections
             = new List<DRM.Section>();
@@ -47,12 +49,15 @@ namespace Gibbed.TombRaider.FileFormats
             uint sectionCount = (uint)this.Sections.Count;
             Stream[] resolvers = new MemoryStream[sectionCount]; // for serialized resolvers
 
+            uint unknown04_size = 0;
+            uint unknown08_size = 0;
+
             // Write DRM Header
             data.WriteValueU32(this.Version, this.LittleEndian);
-            data.WriteValueU32(0); //unknown04
-            data.WriteValueU32(0); //unknown08
-            data.WriteValueU32(0); //unknown0C
-            data.WriteValueU32(0); //unknown10
+            data.WriteValueU32(0); // skip for now
+            data.WriteValueU32(0); // skip for now
+            data.WriteValueU32(0); // unknown0C
+            data.WriteValueU32(0); // unknown10
             data.WriteValueU32(sectionCount, this.LittleEndian);
 
             // Write DRM Section Headers
@@ -71,7 +76,7 @@ namespace Gibbed.TombRaider.FileFormats
                 {
                     resolvers[i] = null;
                     resolverLen = 0;
-                }                
+                }
 
                 data.WriteValueU32((uint)section.Data.Length, this.LittleEndian);
                 data.WriteValueU8((byte)section.Type);
@@ -82,6 +87,21 @@ namespace Gibbed.TombRaider.FileFormats
                 data.WriteValueU32(section.Unknown10, this.LittleEndian);
             }
 
+            // Write Unknown08s
+            for (int i = 0; i < Unknown08s.Count; i++)
+            {
+                unknown08_size += ((uint)Unknown08s[i].Length + 1);
+                data.WriteStringZ(Unknown08s[i]);
+            }
+
+            // Write Unknown04s
+            for (int i = 0; i < Unknown04s.Count; i++)
+            {
+                unknown04_size += ((uint)Unknown04s[i].Length + 1);
+                data.WriteStringZ(Unknown04s[i]);
+            }
+
+            // Write DRM Section Data
             for (int i = 0; i < sectionCount; i++)
             {
                 if (resolvers[i] != null)
@@ -91,6 +111,11 @@ namespace Gibbed.TombRaider.FileFormats
                 data.WriteFromStream(this.Sections[i].Data, this.Sections[i].Data.Length);
                 this.Sections[i].Data.Position = 0;
             }
+
+            // Go back and write unknowns length
+            data.Seek(4, SeekOrigin.Begin);
+            data.WriteValueU32(unknown04_size);
+            data.WriteValueU32(unknown08_size);
 
             data.Position = 0;
             return data;
@@ -135,17 +160,17 @@ namespace Gibbed.TombRaider.FileFormats
                 throw new FormatException("not enough data for header");
             }
 
-            var unknown04 = input.ReadValueU32(this.LittleEndian);
-            var unknown08 = input.ReadValueU32(this.LittleEndian);
-            var unknown0C = input.ReadValueU32(this.LittleEndian);
+            var unknown04_Size = input.ReadValueU32(this.LittleEndian);
+            var unknown08_Size = input.ReadValueU32(this.LittleEndian);
+            var unknown0C = input.ReadValueU32(this.LittleEndian); // extra data after first block?
             var unknown10 = input.ReadValueU32(this.LittleEndian);
             var sectionCount = input.ReadValueU32(this.LittleEndian);
 
-            Debug.Assert((unknown04 + unknown08 + unknown0C + unknown10) == 0, "unk hdr val not 0");                
+            Debug.Assert((unknown0C + unknown10) == 0, "unk hdr val not 0");
 
             if (unknown0C != 0)
             {
-                throw new FormatException(); //why? lol
+                throw new FormatException(); //why?
             }
 
             var sectionHeaders = new DRM.SectionHeader[sectionCount];
@@ -153,6 +178,24 @@ namespace Gibbed.TombRaider.FileFormats
             {
                 sectionHeaders[i] = new DRM.SectionHeader();
                 sectionHeaders[i].Deserialize(input, this.LittleEndian);
+            }
+
+            this.Unknown08s.Clear();
+            using (var unknown08_Data = input.ReadToMemoryStream(unknown08_Size))
+            {
+                while (unknown08_Data.Position < unknown08_Data.Length)
+                {
+                    this.Unknown08s.Add(unknown08_Data.ReadStringZ(Encoding.ASCII));
+                }
+            }
+
+            this.Unknown04s.Clear();
+            using (var unknown04_Data = input.ReadToMemoryStream(unknown04_Size))
+            {
+                while (unknown04_Data.Position < unknown04_Data.Length)
+                {
+                    this.Unknown04s.Add(unknown04_Data.ReadStringZ(Encoding.ASCII));
+                }
             }
 
             var sections = new DRM.Section[sectionCount];
