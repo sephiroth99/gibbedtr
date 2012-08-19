@@ -36,7 +36,8 @@ namespace Gibbed.TombRaider.FileFormats
     public class DRMFile
     {
         public uint Version;
-        public bool LittleEndian;
+        public Endian Endianness;
+
         public List<string> Unknown04s = new List<string>();
         public List<string> Unknown08s = new List<string>();
 
@@ -53,12 +54,12 @@ namespace Gibbed.TombRaider.FileFormats
             uint unknown08_size = 0;
 
             // Write DRM Header
-            data.WriteValueU32(this.Version, this.LittleEndian);
+            data.WriteValueU32(this.Version, this.Endianness);
             data.WriteValueU32(0); // skip for now
             data.WriteValueU32(0); // skip for now
             data.WriteValueU32(0); // unknown0C
             data.WriteValueU32(0); // unknown10
-            data.WriteValueU32(sectionCount, this.LittleEndian);
+            data.WriteValueU32(sectionCount, this.Endianness);
 
             // Write DRM Section Headers
             for (int i = 0; i < sectionCount; i++)
@@ -69,7 +70,7 @@ namespace Gibbed.TombRaider.FileFormats
                 uint resolverLen;
                 if (section.Resolver != null)
                 {
-                    resolvers[i] = section.Resolver.Serialize(this.LittleEndian);
+                    resolvers[i] = section.Resolver.Serialize(this.Endianness);
                     resolverLen = (uint)resolvers[i].Length;
                 }
                 else
@@ -78,13 +79,13 @@ namespace Gibbed.TombRaider.FileFormats
                     resolverLen = 0;
                 }
 
-                data.WriteValueU32((uint)section.Data.Length, this.LittleEndian);
+                data.WriteValueU32((uint)section.Data.Length, this.Endianness);
                 data.WriteValueU8((byte)section.Type);
                 data.WriteValueU8(section.Unknown05);
-                data.WriteValueU16(section.Unknown06, this.LittleEndian);
-                data.WriteValueU32((uint)section.Flags | (resolverLen << 8), this.LittleEndian);
-                data.WriteValueU32(section.Id, this.LittleEndian);
-                data.WriteValueU32(section.Unknown10, this.LittleEndian);
+                data.WriteValueU16(section.Unknown06, this.Endianness);
+                data.WriteValueU32((uint)section.Flags | (resolverLen << 8), this.Endianness);
+                data.WriteValueU32(section.Id, this.Endianness);
+                data.WriteValueU32(section.Unknown10, this.Endianness);
             }
 
             // Write Unknown08s
@@ -123,12 +124,17 @@ namespace Gibbed.TombRaider.FileFormats
 
         public void Deserialize(Stream input)
         {
-            var magic = input.ReadValueU32(false);
+            var magic = input.ReadValueU32(Endian.Big);
             input.Seek(-4, SeekOrigin.Current);
 
             if (magic == CDRMFile.Magic)
             {
                 input = CDRMFile.Decompress(input);
+            }
+
+            if (input.Length < 24)
+            {
+                throw new FormatException("not enough data for header");
             }
 
             var version = input.ReadValueU32();
@@ -139,11 +145,12 @@ namespace Gibbed.TombRaider.FileFormats
                 throw new FormatException();
             }
 
-            this.LittleEndian =
-                version == 14 ||
-                version == 19 ||
-                version == 21;
-            this.Version = this.LittleEndian == true ? version : version.Swap();
+            if (version == 14 || version == 19 || version == 21)
+                this.Endianness = Endian.Little;
+            else
+                this.Endianness = Endian.Big;
+
+            this.Version = this.Endianness == Endian.Little ? version : version.Swap();
 
             if (this.Version == 14)
             {
@@ -155,16 +162,11 @@ namespace Gibbed.TombRaider.FileFormats
                 throw new NotSupportedException("DX3 not supported");
             }
 
-            if (input.Length < 20)
-            {
-                throw new FormatException("not enough data for header");
-            }
-
-            var unknown04_Size = input.ReadValueU32(this.LittleEndian);
-            var unknown08_Size = input.ReadValueU32(this.LittleEndian);
-            var unknown0C = input.ReadValueU32(this.LittleEndian); // extra data after first block?
-            var unknown10 = input.ReadValueU32(this.LittleEndian);
-            var sectionCount = input.ReadValueU32(this.LittleEndian);
+            var unknown04_Size = input.ReadValueU32(this.Endianness);
+            var unknown08_Size = input.ReadValueU32(this.Endianness);
+            var unknown0C = input.ReadValueU32(this.Endianness); // extra data after first block?
+            var unknown10 = input.ReadValueU32(this.Endianness);
+            var sectionCount = input.ReadValueU32(this.Endianness);
 
             Debug.Assert((unknown0C + unknown10) == 0, "unk hdr val not 0");
 
@@ -177,7 +179,7 @@ namespace Gibbed.TombRaider.FileFormats
             for (uint i = 0; i < sectionCount; i++)
             {
                 sectionHeaders[i] = new DRM.SectionHeader();
-                sectionHeaders[i].Deserialize(input, this.LittleEndian);
+                sectionHeaders[i].Deserialize(input, this.Endianness);
             }
 
             this.Unknown08s.Clear();
@@ -221,7 +223,7 @@ namespace Gibbed.TombRaider.FileFormats
                     using (var buffer = input.ReadToMemoryStream(sectionHeader.HeaderSize))
                     {
                         var resolver = new DRM.Resolver();
-                        resolver.Deserialize(buffer, this.LittleEndian);
+                        resolver.Deserialize(buffer, this.Endianness);
                         section.Resolver = resolver;
                     }
                 }

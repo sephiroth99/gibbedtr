@@ -42,53 +42,53 @@ namespace Gibbed.TombRaider.FileFormats.DRM
         public List<uint> Unknown3s = new List<uint>();
         public List<Unknown4Resolver> Unknown4s = new List<Unknown4Resolver>();
 
-        public Stream Serialize(bool littleEndian)
+        public Stream Serialize(Endian endianness)
         {
             MemoryStream data = new MemoryStream();
 
-            data.WriteValueU32((uint)LocalDataResolvers.Count, littleEndian);
-            data.WriteValueU32((uint)RemoteDataResolvers.Count, littleEndian);
-            data.WriteValueU32((uint)Unknown2s.Count, littleEndian);
-            data.WriteValueU32(0, littleEndian); // 0 because we crashed if it was >0
-            data.WriteValueU32((uint)Unknown4s.Count, littleEndian);
+            data.WriteValueU32((uint)LocalDataResolvers.Count, endianness);
+            data.WriteValueU32((uint)RemoteDataResolvers.Count, endianness);
+            data.WriteValueU32((uint)Unknown2s.Count, endianness);
+            data.WriteValueU32(0, endianness); // 0 because we crashed if it was >0
+            data.WriteValueU32((uint)Unknown4s.Count, endianness);
 
             foreach (LocalDataResolver r in LocalDataResolvers)
             {
                 var val = r.Serialize();
-                data.WriteValueU64(val, littleEndian);
+                data.WriteValueU64(val, endianness);
             }
 
             foreach (RemoteDataResolver r in RemoteDataResolvers)
             {
-                data.WriteValueU64(r.Serialize(), littleEndian);
+                data.WriteValueU64(r.Serialize(), endianness);
             }
 
             foreach (Unknown2Resolver r in Unknown2s)
             {
-                data.WriteValueU32(r.Serialize(), littleEndian);
+                data.WriteValueU32(r.Serialize(), endianness);
             }
 
             foreach (Unknown4Resolver r in Unknown4s)
             {
-                data.WriteValueU32(r.Serialize(), littleEndian);
+                data.WriteValueU32(r.Serialize(), endianness);
             }
 
             data.Position = 0;
             return data;
         }
 
-        public void Deserialize(Stream input, bool littleEndian)
+        public void Deserialize(Stream input, Endian endianness)
         {
             if (input.Length < 20)
             {
                 throw new FormatException("bad section header size?");
             }
 
-            var count0 = input.ReadValueU32(littleEndian);
-            var count1 = input.ReadValueU32(littleEndian);
-            var count2 = input.ReadValueU32(littleEndian);
-            var count3 = input.ReadValueU32(littleEndian);
-            var count4 = input.ReadValueU32(littleEndian);
+            var count0 = input.ReadValueU32(endianness);
+            var count1 = input.ReadValueU32(endianness);
+            var count2 = input.ReadValueU32(endianness);
+            var count3 = input.ReadValueU32(endianness);
+            var count4 = input.ReadValueU32(endianness);
 
             this.LocalDataResolvers.Clear();
             for (uint i = 0; i < count0; i++)
