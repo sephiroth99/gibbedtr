@@ -132,11 +132,6 @@ namespace Gibbed.TombRaider.FileFormats
                 input = CDRMFile.Decompress(input);
             }
 
-            if (input.Length < 24)
-            {
-                throw new FormatException("not enough data for header");
-            }
-
             var version = input.ReadValueU32();
             if (version != 14 && version.Swap() != 14 &&
                 version != 19 && version.Swap() != 19 &&
@@ -160,6 +155,11 @@ namespace Gibbed.TombRaider.FileFormats
             if (this.Version == 21)
             {
                 throw new NotSupportedException("DX3 not supported");
+            }
+
+            if (input.Length < 24)
+            {
+                throw new FormatException("not enough data for header");
             }
 
             var unknown04_Size = input.ReadValueU32(this.Endianness);

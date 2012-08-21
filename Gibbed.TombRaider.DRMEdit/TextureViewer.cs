@@ -169,6 +169,9 @@ namespace Gibbed.TombRaider.DRMEdit
             if (i.Width != this.Texture.Width || i.Height != this.Texture.Height)
                 throw new FormatException("New texture must have the same size as the old one!");
 
+            if (this.Texture.Mipmaps.Count > 1)
+                throw new NotSupportedException("Texture with multiple mipmaps not supported!");
+
             var bitmap = new Bitmap(i/*, this.Texture.Width, this.Texture.Height*/);
 
             if (bitmap.PixelFormat != PixelFormat.Format32bppArgb)
@@ -361,13 +364,9 @@ namespace Gibbed.TombRaider.DRMEdit
             {
                 MessageBox.Show("Unsupported image format", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            catch (FormatException ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("File error", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
