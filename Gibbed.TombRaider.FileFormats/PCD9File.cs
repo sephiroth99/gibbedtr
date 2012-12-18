@@ -42,6 +42,7 @@ namespace Gibbed.TombRaider.FileFormats
 
         public uint Unknown0C;
         public ushort Unknown16;
+        public bool unknownFlag;
 
         public Stream Serialize()
         {
@@ -93,6 +94,11 @@ namespace Gibbed.TombRaider.FileFormats
             this.BPP = input.ReadValueU8();
             var mipMapCount = 1 + input.ReadValueU8();
             this.Unknown16 = input.ReadValueU16();
+            if ((this.Unknown16 & 0x8000) != 0)
+            {
+                throw new NotSupportedException();
+                this.unknownFlag = true;
+            }
 
             this.Mipmaps.Clear();
             using (var data = input.ReadToMemoryStream(dataSize))
