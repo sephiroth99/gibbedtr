@@ -47,6 +47,9 @@ namespace Gibbed.TombRaider.DRMEdit
             this.Data = new byte[section.Data.Length];
             section.Data.Read(this.Data, 0, this.Data.Length);
 
+            this.tabPage1.Text = "File Info";
+            this.tabText1.Text = string.Format("ID:\t{0:X8}\nType:\t{1}\nFilesize:\t{2}", section.Id, section.Type, section.Data.Length);
+
             this.UpdatePreview();
         }
 

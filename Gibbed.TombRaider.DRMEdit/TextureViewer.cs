@@ -49,10 +49,11 @@ namespace Gibbed.TombRaider.DRMEdit
             texture.Deserialize(section.Data);
 
             this.hintLabel.Text = string.Format(
-                "{0} : {1}x{2}",
+                "{0} : {1}x{2} | Filesize: {3} Bytes",
                 texture.Format,
-                texture.Width, texture.Height);
-            //this.Text += ": " + entry.Description;
+                texture.Width, texture.Height,
+                section.Data.Length);
+            this.Text += string.Format(": {0:X8}", section.Id);
 
             this.Texture = texture;
             this.Section = section;
@@ -167,10 +168,10 @@ namespace Gibbed.TombRaider.DRMEdit
         private void ReplaceImage(Image i)
         {
             if (i.Width != this.Texture.Width || i.Height != this.Texture.Height)
-                throw new FormatException("New texture must have the same size as the old one!");
+                throw new FormatException("New texture must have the same size as the old one");
 
             if (this.Texture.Mipmaps.Count > 1)
-                throw new NotSupportedException("Texture with multiple mipmaps not supported!");
+                throw new NotSupportedException("Texture with multiple mipmaps not supported");
 
             var bitmap = new Bitmap(i/*, this.Texture.Width, this.Texture.Height*/);
 

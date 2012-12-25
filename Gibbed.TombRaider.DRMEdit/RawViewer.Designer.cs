@@ -65,12 +65,14 @@ namespace Gibbed.TombRaider.DRMEdit
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabText1 = new System.Windows.Forms.RichTextBox();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip
@@ -160,6 +162,7 @@ namespace Gibbed.TombRaider.DRMEdit
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.tabText1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -173,10 +176,23 @@ namespace Gibbed.TombRaider.DRMEdit
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(228, 189);
+            this.tabPage2.Size = new System.Drawing.Size(632, 137);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // tabText1
+            // 
+            this.tabText1.BackColor = System.Drawing.Color.White;
+            this.tabText1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tabText1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.tabText1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabText1.Location = new System.Drawing.Point(6, 6);
+            this.tabText1.Name = "tabText1";
+            this.tabText1.ReadOnly = true;
+            this.tabText1.Size = new System.Drawing.Size(191, 96);
+            this.tabText1.TabIndex = 1;
+            this.tabText1.Text = "";
             // 
             // RawViewer
             // 
@@ -194,6 +210,7 @@ namespace Gibbed.TombRaider.DRMEdit
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -211,5 +228,6 @@ namespace Gibbed.TombRaider.DRMEdit
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.RichTextBox tabText1;
     }
 }
