@@ -1,0 +1,12 @@
+<project>
+	<name>Tomb Raider 9 (Xenon)</name>
+	<dependencies>
+		<dependency>Shared</dependency>
+	</dependencies>
+	<list_location>Tomb Raider 9 (Xenon)</list_location>
+	<install_locations>
+		<install_location>
+			<action type="path">D:\ntr\extract</action>
+		</install_location>
+	</install_locations>
+</project>
