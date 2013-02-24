@@ -49,6 +49,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gibbed.TombRaider.FileForma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gibbed.TombRaider.DRMEdit", "Gibbed.TombRaider.DRMEdit\Gibbed.TombRaider.DRMEdit.csproj", "{E63F94E8-23C9-4730-918C-2423076B855A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gibbed.TombRaider.UnpackTiger", "Gibbed.TombRaider.UnpackTiger\Gibbed.TombRaider.UnpackTiger.csproj", "{A00DAC02-7E49-4822-8845-80DC186145F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -249,6 +251,16 @@ Global
 		{E63F94E8-23C9-4730-918C-2423076B855A}.Release|Mixed Platforms.Build.0 = Release|x86
 		{E63F94E8-23C9-4730-918C-2423076B855A}.Release|x86.ActiveCfg = Release|x86
 		{E63F94E8-23C9-4730-918C-2423076B855A}.Release|x86.Build.0 = Release|x86
+		{A00DAC02-7E49-4822-8845-80DC186145F4}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{A00DAC02-7E49-4822-8845-80DC186145F4}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{A00DAC02-7E49-4822-8845-80DC186145F4}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{A00DAC02-7E49-4822-8845-80DC186145F4}.Debug|x86.ActiveCfg = Debug|x86
+		{A00DAC02-7E49-4822-8845-80DC186145F4}.Debug|x86.Build.0 = Debug|x86
+		{A00DAC02-7E49-4822-8845-80DC186145F4}.Release|Any CPU.ActiveCfg = Release|x86
+		{A00DAC02-7E49-4822-8845-80DC186145F4}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{A00DAC02-7E49-4822-8845-80DC186145F4}.Release|Mixed Platforms.Build.0 = Release|x86
+		{A00DAC02-7E49-4822-8845-80DC186145F4}.Release|x86.ActiveCfg = Release|x86
+		{A00DAC02-7E49-4822-8845-80DC186145F4}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -273,6 +285,7 @@ Global
 		{8613C85B-B1FD-4CB9-A107-316B6EB4A9FB} = {2B5008B5-BCB1-4107-B355-0ABCF04A635C}
 		{1DD8D292-2312-453E-8B76-B41B9F822C6E} = {2B5008B5-BCB1-4107-B355-0ABCF04A635C}
 		{E63F94E8-23C9-4730-918C-2423076B855A} = {2B5008B5-BCB1-4107-B355-0ABCF04A635C}
+		{A00DAC02-7E49-4822-8845-80DC186145F4} = {2B5008B5-BCB1-4107-B355-0ABCF04A635C}
 		{2F2E00FA-694C-4A3D-BC83-710D35426782} = {438E6E61-E3AD-418F-9D07-7BE863BE345A}
 	EndGlobalSection
 EndGlobal
