@@ -1,0 +1,12 @@
+<project>
+	<name>Tomb Raider 8 DLC (Xenon)</name>
+	<dependencies>
+		<dependency>Shared</dependency>
+	</dependencies>
+	<list_location>Tomb Raider 8 DLC (Xenon)</list_location>
+	<install_locations>
+		<install_location>
+			<action type="path">E:\games\bfbak\tru-dlc-x360</action>
+		</install_location>
+	</install_locations>
+</project>
