@@ -37,9 +37,9 @@ namespace Gibbed.CrystalDynamics.FileFormats
             = new List<Big.EntryV2>();
 
         public uint Unknown04;
-        public uint Unknown08;
+        public uint NumberOfFiles;
         public uint Unknown10;
-        public string Unknown14;
+        public string BasePath;
 
         public static int EstimateHeaderSize(int count)
         {
@@ -51,7 +51,20 @@ namespace Gibbed.CrystalDynamics.FileFormats
 
         public void Serialize(Stream output)
         {
-            throw new NotImplementedException();
+            output.WriteValueU32(0x54414653, this.LittleEndian);
+            output.WriteValueU32(this.Unknown04, this.LittleEndian);
+            output.WriteValueU32(this.NumberOfFiles, this.LittleEndian);
+            output.WriteValueS32(this.Entries.Count, this.LittleEndian);
+            output.WriteValueU32(this.Unknown10, this.LittleEndian);
+            output.WriteString(this.BasePath, 32, Encoding.ASCII);
+
+            foreach (var e in this.Entries.OrderBy(e => e.NameHash))
+            {
+                output.WriteValueU32(e.NameHash, this.LittleEndian);
+                output.WriteValueU32(e.Locale, this.LittleEndian);
+                output.WriteValueU32(e.Size, this.LittleEndian);
+                output.WriteValueU32(e.File | e.Offset, this.LittleEndian);
+            }
         }
 
         public void Deserialize(Stream input)
@@ -61,14 +74,14 @@ namespace Gibbed.CrystalDynamics.FileFormats
             if (magic != 0x54414653)
                 throw new NotSupportedException("Bad magic number");
 
-            Unknown04 = input.ReadValueU32(this.LittleEndian);
-            Unknown08 = input.ReadValueU32(this.LittleEndian);
+            this.Unknown04 = input.ReadValueU32(this.LittleEndian);
+            this.NumberOfFiles = input.ReadValueU32(this.LittleEndian);
 
             var count = input.ReadValueU32(this.LittleEndian);
 
-            Unknown10 = input.ReadValueU32(this.LittleEndian);
+            this.Unknown10 = input.ReadValueU32(this.LittleEndian);
 
-            Unknown14 = input.ReadString(32, true, Encoding.ASCII);
+            this.BasePath = input.ReadString(32, true, Encoding.ASCII);
 
             this.Entries.Clear();
             for (uint i = 0; i < count; i++)
@@ -77,8 +90,9 @@ namespace Gibbed.CrystalDynamics.FileFormats
                 entry.NameHash = input.ReadValueU32(this.LittleEndian);
                 entry.Locale = input.ReadValueU32(this.LittleEndian);
                 entry.Size = input.ReadValueU32(this.LittleEndian);
-                entry.Offset = (uint)(input.ReadValueU16(this.LittleEndian) << 8) + input.ReadValueU8();
-                entry.File = input.ReadValueU8();
+                var offset = input.ReadValueU32(this.LittleEndian);
+                entry.Offset = offset & 0xFFFFFF00;
+                entry.File = offset & 0xFF;
                 this.Entries.Add(entry);
             }
         }

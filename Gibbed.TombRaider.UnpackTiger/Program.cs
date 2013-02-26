@@ -207,17 +207,16 @@ namespace Gibbed.TombRaider.UnpackTiger
                 Stream data = null;
                 uint? currentBigFile = null;
                 uint? lastLocale = null;
-                var maxBlocksPerFile = big.FileAlignment / 2048;
                 {
                     long current = 0;
                     long total = big.Entries.Count;
 
-                    foreach (var entry in big.Entries.OrderBy(e => e.Offset))
+                    foreach (var entry in big.Entries.OrderBy(e => e.File).ThenBy(e => e.Offset))
                     {
                         current++;
 
                         var entryBigFile = entry.File;
-                        var entryOffset = entry.Offset * 256;
+                        var entryOffset = entry.Offset;
 
                         if (currentBigFile.HasValue == false ||
                             currentBigFile.Value != entryBigFile)
