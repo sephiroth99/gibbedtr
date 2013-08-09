@@ -56,11 +56,12 @@ namespace Gibbed.DeusEx3.DRMEdit
             this.typeImageList = new System.Windows.Forms.ImageList(this.components);
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.saveDRMButton = new System.Windows.Forms.ToolStripButton();
+            this.filterTypeBox = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.viewSectionButton = new System.Windows.Forms.ToolStripButton();
+            this.viewSectionRawButton = new System.Windows.Forms.ToolStripButton();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.hintLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.viewSectionRawButton = new System.Windows.Forms.ToolStripButton();
             this.toolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -75,6 +76,8 @@ namespace Gibbed.DeusEx3.DRMEdit
             this.entryTreeView.SelectedImageIndex = 0;
             this.entryTreeView.Size = new System.Drawing.Size(480, 193);
             this.entryTreeView.TabIndex = 8;
+            this.entryTreeView.DoubleClick += new System.EventHandler(this.entryTreeView_DoubleClick);
+            this.entryTreeView.KeyUp += new System.Windows.Forms.KeyEventHandler(this.entryTreeView_KeyUp);
             // 
             // typeImageList
             // 
@@ -86,6 +89,7 @@ namespace Gibbed.DeusEx3.DRMEdit
             // 
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveDRMButton,
+            this.filterTypeBox,
             this.toolStripSeparator1,
             this.viewSectionButton,
             this.viewSectionRawButton});
@@ -101,8 +105,14 @@ namespace Gibbed.DeusEx3.DRMEdit
             this.saveDRMButton.Image = ((System.Drawing.Image)(resources.GetObject("saveDRMButton.Image")));
             this.saveDRMButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.saveDRMButton.Name = "saveDRMButton";
-            this.saveDRMButton.Size = new System.Drawing.Size(80, 22);
+            this.saveDRMButton.Size = new System.Drawing.Size(76, 22);
             this.saveDRMButton.Text = "Save DRM";
+            // 
+            // filterTypeBox
+            // 
+            this.filterTypeBox.Name = "filterTypeBox";
+            this.filterTypeBox.Size = new System.Drawing.Size(121, 25);
+            this.filterTypeBox.SelectedIndexChanged += new System.EventHandler(this.filterTypeBox_SelectedIndexChanged);
             // 
             // toolStripSeparator1
             // 
@@ -114,10 +124,20 @@ namespace Gibbed.DeusEx3.DRMEdit
             this.viewSectionButton.Image = ((System.Drawing.Image)(resources.GetObject("viewSectionButton.Image")));
             this.viewSectionButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.viewSectionButton.Name = "viewSectionButton";
-            this.viewSectionButton.Size = new System.Drawing.Size(94, 22);
+            this.viewSectionButton.Size = new System.Drawing.Size(87, 22);
             this.viewSectionButton.Text = "View Section";
             this.viewSectionButton.ToolTipText = "View Section";
             this.viewSectionButton.Click += new System.EventHandler(this.OnViewSection);
+            // 
+            // viewSectionRawButton
+            // 
+            this.viewSectionRawButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.viewSectionRawButton.Image = ((System.Drawing.Image)(resources.GetObject("viewSectionRawButton.Image")));
+            this.viewSectionRawButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.viewSectionRawButton.Name = "viewSectionRawButton";
+            this.viewSectionRawButton.Size = new System.Drawing.Size(23, 22);
+            this.viewSectionRawButton.Text = "View Section as Raw data";
+            this.viewSectionRawButton.Click += new System.EventHandler(this.OnViewSectionRaw);
             // 
             // statusStrip
             // 
@@ -132,18 +152,8 @@ namespace Gibbed.DeusEx3.DRMEdit
             // hintLabel
             // 
             this.hintLabel.Name = "hintLabel";
-            this.hintLabel.Size = new System.Drawing.Size(30, 17);
+            this.hintLabel.Size = new System.Drawing.Size(26, 17);
             this.hintLabel.Text = "Hint";
-            // 
-            // viewSectionRawButton
-            // 
-            this.viewSectionRawButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.viewSectionRawButton.Image = ((System.Drawing.Image)(resources.GetObject("viewSectionRawButton.Image")));
-            this.viewSectionRawButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.viewSectionRawButton.Name = "viewSectionRawButton";
-            this.viewSectionRawButton.Size = new System.Drawing.Size(23, 22);
-            this.viewSectionRawButton.Text = "View Section as Raw data";
-            this.viewSectionRawButton.Click += new System.EventHandler(this.OnViewSectionRaw);
             // 
             // FileViewer
             // 
@@ -175,5 +185,6 @@ namespace Gibbed.DeusEx3.DRMEdit
         private System.Windows.Forms.ToolStripStatusLabel hintLabel;
         private System.Windows.Forms.ImageList typeImageList;
         private System.Windows.Forms.ToolStripButton viewSectionRawButton;
+        private System.Windows.Forms.ToolStripComboBox filterTypeBox;
     }
 }
