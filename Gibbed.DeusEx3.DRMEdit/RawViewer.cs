@@ -81,5 +81,23 @@ namespace Gibbed.DeusEx3.DRMEdit
                 this.UpdatePreview();
             }
         }
+
+        private void RawViewer_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                e.Handled = true;
+                Close();
+            }
+        }
+
+        private void hexBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                e.Handled = true;
+                Close();
+            }
+        }
     }
 }

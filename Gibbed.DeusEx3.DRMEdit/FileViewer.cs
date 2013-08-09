@@ -34,6 +34,7 @@ namespace Gibbed.DeusEx3.DRMEdit
     {
         private string FilePath;
         private FileFormats.DRMFile FileData;
+        private bool ManuallyGeneratedEvent { get; set; }
 
         public FileViewer()
         {
@@ -56,6 +57,8 @@ namespace Gibbed.DeusEx3.DRMEdit
             this.typeImageList.Images.Add("RenderResource", SectionTypeImages.RenderResource);
             this.typeImageList.Images.Add("Script", SectionTypeImages.Script);
             this.typeImageList.Images.Add("Wave", SectionTypeImages.Wave);
+
+            PopulateTypeFilter();
         }
 
         public void LoadResource(string path)
@@ -201,8 +204,15 @@ namespace Gibbed.DeusEx3.DRMEdit
             }
             */
 
+            bool displayAll = string.Compare((string)filterTypeBox.SelectedItem, "All", true) == 0;
+            DRM.SectionType filtered = (displayAll ?
+                DRM.SectionType.Object :
+                (DRM.SectionType)Enum.Parse(typeof(DRM.SectionType), (string)filterTypeBox.SelectedItem));
+
             foreach (var section in this.FileData.Sections.OrderBy(s => s.Id))
             {
+                if (!displayAll && filtered != section.Type) continue;
+
                 var typeName = section.Type.ToString();
 
                 var name = section.Id.ToString("X8");
@@ -238,6 +248,21 @@ namespace Gibbed.DeusEx3.DRMEdit
             this.entryTreeView.Nodes.Add(root);
             root.Expand();
             this.entryTreeView.EndUpdate();
+        }
+
+        private void PopulateTypeFilter()
+        {
+            filterTypeBox.Items.Clear();
+            filterTypeBox.Items.Add("All");
+
+            foreach (DRM.SectionType o in typeof(DRM.SectionType).GetEnumValues())
+            {
+                filterTypeBox.Items.Add(o.ToString());
+            }
+
+            ManuallyGeneratedEvent = true;
+            filterTypeBox.SelectedIndex = 0;
+            ManuallyGeneratedEvent = false;
         }
 
         private ISectionViewer GetViewer(DRM.SectionType type, bool forceRaw)
@@ -280,6 +305,26 @@ namespace Gibbed.DeusEx3.DRMEdit
         private void OnViewSectionRaw(object sender, EventArgs e)
         {
             this.OpenSection(this.entryTreeView.SelectedNode, true);
+        }
+
+        private void entryTreeView_DoubleClick(object sender, EventArgs e)
+        {
+            this.OpenSection(this.entryTreeView.SelectedNode, false);
+        }
+
+        private void entryTreeView_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true;
+                this.OpenSection(this.entryTreeView.SelectedNode, false);
+            }
+        }
+
+        private void filterTypeBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ManuallyGeneratedEvent) return;
+            BuildTree();
         }
     }
 }
