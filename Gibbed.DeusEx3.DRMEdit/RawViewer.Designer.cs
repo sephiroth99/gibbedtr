@@ -86,7 +86,7 @@ namespace Gibbed.DeusEx3.DRMEdit
             this.loadFromFileButton.Image = ((System.Drawing.Image)(resources.GetObject("loadFromFileButton.Image")));
             this.loadFromFileButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.loadFromFileButton.Name = "loadFromFileButton";
-            this.loadFromFileButton.Size = new System.Drawing.Size(105, 22);
+            this.loadFromFileButton.Size = new System.Drawing.Size(96, 22);
             this.loadFromFileButton.Text = "Load From File";
             this.loadFromFileButton.Click += new System.EventHandler(this.OnLoadFromFile);
             // 
@@ -95,7 +95,7 @@ namespace Gibbed.DeusEx3.DRMEdit
             this.saveToFileButton.Image = ((System.Drawing.Image)(resources.GetObject("saveToFileButton.Image")));
             this.saveToFileButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.saveToFileButton.Name = "saveToFileButton";
-            this.saveToFileButton.Size = new System.Drawing.Size(89, 22);
+            this.saveToFileButton.Size = new System.Drawing.Size(85, 22);
             this.saveToFileButton.Text = "Save To File";
             this.saveToFileButton.Click += new System.EventHandler(this.OnSaveToFile);
             // 
@@ -142,6 +142,7 @@ namespace Gibbed.DeusEx3.DRMEdit
             this.hexBox.TabIndex = 3;
             this.hexBox.UseFixedBytesPerLine = true;
             this.hexBox.VScrollBarVisible = true;
+            this.hexBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.hexBox_KeyDown);
             // 
             // tabControl1
             // 
@@ -169,7 +170,7 @@ namespace Gibbed.DeusEx3.DRMEdit
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(228, 189);
+            this.tabPage2.Size = new System.Drawing.Size(632, 137);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -183,6 +184,7 @@ namespace Gibbed.DeusEx3.DRMEdit
             this.Controls.Add(this.toolStrip);
             this.Name = "RawViewer";
             this.Text = "Raw View";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RawViewer_KeyDown);
             this.toolStrip.ResumeLayout(false);
             this.toolStrip.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);

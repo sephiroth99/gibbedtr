@@ -124,7 +124,7 @@ namespace Gibbed.DeusEx3.DRMEdit
             this.loadFromFileButton.Image = ((System.Drawing.Image)(resources.GetObject("loadFromFileButton.Image")));
             this.loadFromFileButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.loadFromFileButton.Name = "loadFromFileButton";
-            this.loadFromFileButton.Size = new System.Drawing.Size(105, 22);
+            this.loadFromFileButton.Size = new System.Drawing.Size(96, 22);
             this.loadFromFileButton.Text = "Load From File";
             // 
             // saveToFileButton
@@ -132,7 +132,7 @@ namespace Gibbed.DeusEx3.DRMEdit
             this.saveToFileButton.Image = ((System.Drawing.Image)(resources.GetObject("saveToFileButton.Image")));
             this.saveToFileButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.saveToFileButton.Name = "saveToFileButton";
-            this.saveToFileButton.Size = new System.Drawing.Size(89, 22);
+            this.saveToFileButton.Size = new System.Drawing.Size(85, 22);
             this.saveToFileButton.Text = "Save To File";
             this.saveToFileButton.Click += new System.EventHandler(this.OnSaveToFile);
             // 
@@ -180,7 +180,7 @@ namespace Gibbed.DeusEx3.DRMEdit
             // hintLabel
             // 
             this.hintLabel.Name = "hintLabel";
-            this.hintLabel.Size = new System.Drawing.Size(30, 17);
+            this.hintLabel.Size = new System.Drawing.Size(26, 17);
             this.hintLabel.Text = "Hint";
             // 
             // saveFileDialog
@@ -198,6 +198,7 @@ namespace Gibbed.DeusEx3.DRMEdit
             this.Controls.Add(this.toolStrip);
             this.Name = "TextureViewer";
             this.Text = "Texture";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextureViewer_KeyDown);
             this.previewPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.previewPictureBox)).EndInit();
             this.toolStrip.ResumeLayout(false);

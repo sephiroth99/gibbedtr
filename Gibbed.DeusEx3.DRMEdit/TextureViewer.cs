@@ -262,5 +262,14 @@ namespace Gibbed.DeusEx3.DRMEdit
                 this.previewPictureBox.Image.Save(output, ImageFormat.Png);
             }
         }
+
+        private void TextureViewer_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                e.Handled = true;
+                Close();
+            }
+        }
     }
 }
